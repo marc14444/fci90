@@ -9,7 +9,17 @@ const PORT = process.env.PORT || 3000;
 // Configuration de base
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:3000",
+      "https://formulaire-wjnw.onrender.com",
+      "*",
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 
 // Debug middleware (à retirer en production)
 app.use((req, res, next) => {
