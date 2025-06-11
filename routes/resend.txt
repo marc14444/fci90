@@ -1,0 +1,224 @@
+const express = require("express");
+const router = express.Router();
+const multer = require("multer");
+const { createClient } = require("@supabase/supabase-js");
+const { Resend } = require("resend");
+const Candidature = require("../models/Candidature");
+require("dotenv").config();
+
+// Configuration Multer (suppression des restrictions de type MIME)
+const storage = multer.memoryStorage();
+const upload = multer({
+  storage,
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB max par fichier
+    files: 5, // Max 5 fichiers
+  },
+  fileFilter: (req, file, cb) => {
+    cb(null, true); // Accepter tous les types de fichiers
+  },
+});
+
+// Initialisation Supabase avec le bucket "documents"
+let supabase;
+try {
+  supabase = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY,
+    {
+      auth: {
+        persistSession: false,
+      },
+    }
+  );
+} catch (error) {
+  console.error("Erreur d'initialisation Supabase:", error);
+  process.exit(1);
+}
+
+// Initialisation Resend
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+// Fonction d'upload vers Supabase (modifiée pour le bucket "documents")
+const uploadFileToSupabase = async (file, candidatureId) => {
+  try {
+    if (!supabase) {
+      throw new Error("Connexion Supabase non initialisée");
+    }
+
+    // Normalisation avancée du nom de fichier
+    const cleanName = file.originalname
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-zA-Z0-9.-]/g, "_");
+
+    const fileExt = cleanName.split(".").pop().toLowerCase();
+    const fileName = `candidatures/${candidatureId}/${Date.now()}-${cleanName}`;
+
+    // Upload vers le bucket "documents"
+    const { error } = await supabase.storage
+      .from("documents") // Bucket modifié ici
+      .upload(fileName, file.buffer, {
+        contentType: file.mimetype,
+        upsert: false,
+      });
+
+    if (error) throw error;
+
+    // Récupération de l'URL publique
+    const {
+      data: { publicUrl },
+    } = supabase.storage
+      .from("documents") // Bucket modifié ici
+      .getPublicUrl(fileName);
+
+    return publicUrl;
+  } catch (error) {
+    console.error(`Erreur upload fichier ${file.originalname}:`, error.message);
+    throw new Error(`Échec de l'upload: ${file.originalname}`);
+  }
+};
+
+// Fonction pour générer le contenu HTML de l'email (inchangée)
+const generateEmailContent = (data, fichiers) => {
+  return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; }
+        h2 { color: #2c3e50; }
+        .info { margin-bottom: 15px; }
+        .label { font-weight: bold; color: #34495e; }
+        ul { list-style-type: none; padding: 0; }
+        li { margin-bottom: 5px; }
+        a { color: #3498db; text-decoration: none; }
+      </style>
+    </head>
+    <body>
+      <h2>Nouvelle candidature reçue</h2>
+      
+      <div class="info"><span class="label">Nom:</span> ${data.nom}</div>
+      <div class="info"><span class="label">Prénom:</span> ${data.prenom}</div>
+      <div class="info"><span class="label">Email:</span> ${data.email}</div>
+      <div class="info"><span class="label">Téléphone:</span> ${data.telephone}</div>
+      
+      <h3>Détails de la candidature</h3>
+      <div class="info"><span class="label">Domaine:</span> ${data.domaine}</div>
+      <div class="info"><span class="label">Projet:</span> ${data.projet}</div>
+      
+      <h3>Fichiers joints</h3>
+      <ul>
+        ${fichiers
+          .map(
+            (url) =>
+              `<li><a href="${url}" target="_blank">${decodeURIComponent(url.split("/").pop())}</a></li>`
+          )
+          .join("")}
+      </ul>
+      
+      <p style="margin-top: 20px; color: #7f8c8d;">
+        Cette candidature a été enregistrée le ${new Date().toLocaleDateString()} à ${new Date().toLocaleTimeString()}.
+      </p>
+    </body>
+    </html>
+  `;
+};
+
+// Route POST (modifiée pour gérer tous les types de fichiers)
+router.post("/", upload.array("fichiers"), async (req, res) => {
+  try {
+    // Validation des données requises
+    if (!req.body.nom || !req.body.prenom || !req.body.email) {
+      return res.status(400).json({
+        success: false,
+        message: "Les champs nom, prénom et email sont obligatoires.",
+      });
+    }
+
+    // Création de la candidature
+    const nouvelleCandidature = new Candidature({
+      ...req.body,
+      fichiers: [],
+      consentement:
+        req.body.consentement === "on" || req.body.consentement === true,
+    });
+
+    const candidatureSauvee = await nouvelleCandidature.save();
+
+    // Traitement des fichiers
+    const fichiers = [];
+    if (req.files && req.files.length > 0) {
+      await Promise.all(
+        req.files.map(async (file) => {
+          try {
+            const publicUrl = await uploadFileToSupabase(
+              file,
+              candidatureSauvee._id
+            );
+            fichiers.push(publicUrl);
+          } catch (error) {
+            console.error(
+              `Erreur fichier ${file.originalname}:`,
+              error.message
+            );
+            // On continue même si un fichier échoue
+          }
+        })
+      );
+    }
+
+    // Mise à jour avec les URLs des fichiers
+    if (fichiers.length > 0) {
+      candidatureSauvee.fichiers = fichiers;
+      await candidatureSauvee.save();
+    }
+
+    // Envoi de l'email avec Resend
+    const emailData = {
+      nom: req.body.nom,
+      prenom: req.body.prenom,
+      email: req.body.email,
+      telephone: req.body.telephone || "Non renseigné",
+      domaine: req.body.domaine || "Non spécifié",
+      projet: req.body.projet || "Aucun détail fourni",
+    };
+
+    const { error: emailError } = await resend.emails.send({
+      from: process.env.EMAIL_FROM || "onboarding@resend.dev",
+      to: process.env.EMAIL_TO || "caengimultimedia@gmail.com",
+      subject: `Nouvelle candidature FCI90 - ${req.body.prenom} ${req.body.nom}`,
+      html: generateEmailContent(emailData, fichiers),
+      headers: {
+        "X-Entity-Ref-ID": candidatureSauvee._id.toString(),
+      },
+    });
+
+    if (emailError) {
+      console.error("Erreur lors de l'envoi de l'email:", emailError);
+    }
+
+    res.status(201).json({
+      success: true,
+      message: "Candidature soumise avec succès.",
+      candidatureId: candidatureSauvee._id,
+      fichiersUploades: fichiers.length,
+    });
+  } catch (error) {
+    console.error("Erreur serveur:", error);
+
+    const statusCode = error.name === "ValidationError" ? 400 : 500;
+    const errorMessage =
+      statusCode === 400
+        ? "Données de candidature invalides"
+        : "Une erreur est survenue lors du traitement de votre candidature";
+
+    res.status(statusCode).json({
+      success: false,
+      message: errorMessage,
+      error: process.env.NODE_ENV === "development" ? error.message : undefined,
+    });
+  }
+});
+
+module.exports = router;

@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  fci90-backend:
+    build: .
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    volumes:
+      # Optionnel : pour persister les logs
+      - ./logs:/app/logs

@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="shortcut icon"
+      href="./assets/images/logo-caengi.webp"
+      type="image/x-icon"
+    />
+    <meta http-equiv="X-UA-Compatible" content="IE=7" />
+    <meta name="description" content="Formulaire de candidature FCI90" />
+    <meta name="keywords" content="FCI90, CAENGI, formulaire, candidature" />
+    <meta name="author" content="CAENGI" />
+    <meta name="robots" content="index, follow" />
+    <meta name="revisit-after" content="7 days" />
+    <meta name="language" content="fr" />
+    <title>FCI90 - Formulaire de Candidature</title>
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome pour les icônes -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <!-- Dropzone CSS -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css"
+      type="text/css"
+    />
+    <!-- CSS personnalisé -->
+    <link rel="stylesheet" href="./assets/css/styles.css" />
+  </head>
+  <body class="bg-gray-50 font-sans">
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+      <!-- En-tête avec logo -->
+      <header class="mb-8 text-center">
+        <img
+          src="./assets/images/logo-caengi.webp"
+          alt="Logo CAENGI"
+          class="h-20 mx-auto mb-4"
+        />
+        <h1 class="text-3xl font-bold text-blue-800">
+          FCI90 - Formation Certification Insertion en 90 jours
+        </h1>
+        <p class="text-lg text-gray-600 mt-2">Formulaire de candidature</p>
+      </header>
+
+      <!-- Formulaire -->
+      <form id="fci90Form" class="bg-white shadow-md rounded-lg p-6 mb-8">
+        <!-- Section Identité -->
+        <section class="mb-8">
+          <h2
+            class="text-xl font-semibold text-blue-700 border-b border-blue-200 pb-2 mb-4"
+          >
+            Identité
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label for="nom" class="block text-gray-700 mb-2">Nom*</label>
+              <input
+                type="text"
+                id="nom"
+                name="nom"
+                required
+                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label for="prenom" class="block text-gray-700 mb-2"
+                >Prénom*</label
+              >
+              <input
+                type="text"
+                id="prenom"
+                name="prenom"
+                required
+                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label for="date_naissance" class="block text-gray-700 mb-2"
+                >Date de naissance*</label
+              >
+              <input
+                type="date"
+                id="date_naissance"
+                name="date_naissance"
+                required
+                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label for="lieu_naissance" class="block text-gray-700 mb-2"
+                >Lieu de naissance*</label
+              >
+              <input
+                type="text"
+                id="lieu_naissance"
+                name="lieu_naissance"
+                required
+                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label for="nationalite" class="block text-gray-700 mb-2"
+                >Nationalité*</label
+              >
+              <input
+                type="text"
+                id="nationalite"
+                name="nationalite"
+                required
+                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          </div>
+        </section>
+
+        <!-- Section Contacts -->
+        <section class="mb-8">
+          <h2
+            class="text-xl font-semibold text-blue-700 border-b border-blue-200 pb-2 mb-4"
+          >
+            Contacts
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label for="email" class="block text-gray-700 mb-2">Email*</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                required
+                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label for="telephone" class="block text-gray-700 mb-2"
+                >Téléphone*</label
+              >
+              <input
+                type="tel"
+                id="telephone"
+                name="telephone"
+                required
+                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div class="md:col-span-2">
+              <label for="adresse" class="block text-gray-700 mb-2"
+                >Adresse complète*</label
+              >
+              <textarea
+                id="adresse"
+                name="adresse"
+                rows="2"
+                required
+                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              ></textarea>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section Parcours souhaité -->
+        <section class="mb-8">
+          <h2
+            class="text-xl font-semibold text-blue-700 border-b border-blue-200 pb-2 mb-4"
+          >
+            Parcours souhaité
+          </h2>
+          <div class="grid grid-cols-1 gap-6">
+            <div>
+              <label for="domaine" class="block text-gray-700 mb-2"
+                >Domaine de formation*</label
+              >
+              <select
+                id="domaine"
+                name="domaine"
+                required
+                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">Sélectionnez un domaine</option>
+                <option value="hse">
+                  HSE (Hygiène, Sécurité, Environnement)
+                </option>
+                <option value="maintenance">Maintenance Industrielle</option>
+                <option value="forage">Forage & Exploitation Pétrolière</option>
+                <option value="energie">Énergies Renouvelables</option>
+                <option value="electricite">Électricité Industrielle</option>
+                <option value="instrumentation">
+                  Instrumentation & Contrôle
+                </option>
+                <option value="autre">Autre</option>
+              </select>
+            </div>
+            <div>
+              <label for="motivation" class="block text-gray-700 mb-2"
+                >Pourquoi ce choix de formation?*</label
+              >
+              <textarea
+                id="motivation"
+                name="motivation"
+                rows="4"
+                required
+                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              ></textarea>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section Attentes -->
+        <section class="mb-8">
+          <h2
+            class="text-xl font-semibold text-blue-700 border-b border-blue-200 pb-2 mb-4"
+          >
+            Attentes
+          </h2>
+          <div class="grid grid-cols-1 gap-6">
+            <div>
+              <label for="attentes" class="block text-gray-700 mb-2"
+                >Qu'attendez-vous de cette formation?*</label
+              >
+              <textarea
+                id="attentes"
+                name="attentes"
+                rows="4"
+                required
+                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              ></textarea>
+            </div>
+            <div>
+              <label for="projet" class="block text-gray-700 mb-2"
+                >Avez-vous un projet professionnel spécifique?</label
+              >
+              <textarea
+                id="projet"
+                name="projet"
+                rows="4"
+                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              ></textarea>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section Financement -->
+        <section class="mb-8">
+          <h2
+            class="text-xl font-semibold text-blue-700 border-b border-blue-200 pb-2 mb-4"
+          >
+            Financement
+          </h2>
+          <div class="grid grid-cols-1 gap-6">
+            <div>
+              <label class="block text-gray-700 mb-4"
+                >Mode de financement*</label
+              >
+              <div class="space-y-3">
+                <label class="flex items-center">
+                  <input
+                    type="radio"
+                    name="financement"
+                    value="moi"
+                    required
+                    class="mr-2"
+                  />
+                  <span>Auto-financement</span>
+                </label>
+                <label class="flex items-center">
+                  <input
+                    type="radio"
+                    name="financement"
+                    value="parents"
+                    class="mr-2"
+                  />
+                  <span>Parents/Famille</span>
+                </label>
+                <label class="flex items-center">
+                  <input
+                    type="radio"
+                    name="financement"
+                    value="autre"
+                    class="mr-2"
+                  />
+                  <span>Autre (précisez)</span>
+                  <input
+                    type="text"
+                    name="financement_autre"
+                    class="ml-2 px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 hidden"
+                    disabled
+                  />
+                </label>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section Pièces jointes -->
+        <section class="mb-8">
+          <h2
+            class="text-xl font-semibold text-blue-700 border-b border-blue-200 pb-2 mb-4"
+          >
+            Pièces jointes
+          </h2>
+          <p class="text-gray-600 mb-4">
+            Veuillez télécharger au moins un document parmi les suivants (PDF,
+            JPG ou PNG, max 5MB par fichier):
+          </p>
+
+          <div
+            id="dropzone"
+            class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center mb-6 hover:border-blue-500 transition-colors"
+          >
+            <i class="fas fa-cloud-upload-alt text-4xl text-blue-500 mb-3"></i>
+            <p class="text-gray-600 mb-2">
+              Glissez-déposez vos fichiers ici ou cliquez pour sélectionner
+            </p>
+            <button
+              type="button"
+              id="browseFiles"
+              class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            >
+              Parcourir les fichiers
+            </button>
+            <input
+              name="pieces_jointes"
+              type="file"
+              id="fileInput"
+              class="hidden"
+              multiple
+              accept=".pdf,.jpg,.jpeg,.png"
+            />
+            <p class="text-sm text-gray-500 mt-2">
+              Formats acceptés: PDF, JPG, PNG (max 5MB par fichier)
+            </p>
+          </div>
+
+          <div id="fileList" class="space-y-2">
+            <!-- Les fichiers uploadés apparaîtront ici -->
+          </div>
+
+          <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-gray-50 p-3 rounded border border-gray-200">
+              <label class="font-medium text-gray-700">CV</label>
+              <p class="text-sm text-gray-500">Votre curriculum vitae à jour</p>
+              <div id="cvStatus" class="text-gray-500 text-sm mt-1">
+                Optionnel
+              </div>
+            </div>
+            <div class="bg-gray-50 p-3 rounded border border-gray-200">
+              <label class="font-medium text-gray-700">Diplômes</label>
+              <p class="text-sm text-gray-500">Copie de vos diplômes</p>
+              <div id="diplomeStatus" class="text-gray-500 text-sm mt-1">
+                Optionnel
+              </div>
+            </div>
+            <div class="bg-gray-50 p-3 rounded border border-gray-200">
+              <label class="font-medium text-gray-700">Autres documents</label>
+              <p class="text-sm text-gray-500">
+                Certificats, attestations, etc.
+              </p>
+              <div id="autreStatus" class="text-gray-500 text-sm mt-1">
+                Optionnel
+              </div>
+            </div>
+          </div>
+          <p id="fileError" class="text-red-500 text-sm mt-2 hidden">
+            Veuillez uploader au moins un fichier
+          </p>
+        </section>
+
+        <!-- Validation -->
+        <div class="flex items-center mb-4">
+          <input
+            type="checkbox"
+            id="consentement"
+            name="consentement"
+            required
+            class="mr-2"
+          />
+          <label for="consentement" class="text-gray-700"
+            >Je certifie que les informations fournies sont exactes et accepte
+            le traitement de ma candidature.*</label
+          >
+        </div>
+
+        <!-- Bouton de soumission -->
+        <div class="text-center">
+          <button
+            type="submit"
+            id="submitBtn"
+            class="px-6 py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center mx-auto"
+          >
+            <span id="submitText">Soumettre ma candidature</span>
+            <svg
+              id="loadingIcon"
+              class="animate-spin -mr-1 ml-3 h-5 w-5 text-white hidden"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              ></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>
+          </button>
+        </div>
+      </form>
+
+      <!-- Pied de page -->
+      <footer class="text-center text-gray-500 text-sm">
+        <p>© 2025 CAENGI SAS - FCI90. Tous droits réservés.</p>
+      </footer>
+    </div>
+
+    <!-- Popover de succès -->
+    <div
+      id="successPopover"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden"
+    >
+      <div
+        id="popoverContent"
+        class="bg-white rounded-lg p-6 mx-4 max-w-md w-full transform transition-all duration-200 scale-95 opacity-0"
+      >
+        <div class="text-center">
+          <div
+            class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4"
+          >
+            <i class="fas fa-check text-green-600 text-xl"></i>
+          </div>
+          <h3 class="text-lg font-medium text-gray-900 mb-2">
+            Candidature envoyée avec succès !
+          </h3>
+          <p class="text-sm text-gray-500 mb-6">
+            Votre candidature a été transmise à notre équipe. Vous recevrez une
+            réponse dans les plus brefs délais.
+          </p>
+          <button
+            id="closePopover"
+            type="button"
+            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            Fermer
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dropzone JS -->
+    <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+    <!-- Script personnalisé -->
+    <script src="./assets/js/script.js"></script>
+  </body>
+</html>
