@@ -228,7 +228,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
 
       // Configuration de la requête
-      const API_BASE_URL = "http://localhost:3000"; // Changez cette URL selon votre configuration
+      const API_BASE_URL = "https://formulaire-wjnw.onrender.com"; // Changez cette URL selon votre configuration
 
       const response = await fetch(`${API_BASE_URL}/api/candidature`, {
         method: "POST",
