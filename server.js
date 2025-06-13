@@ -15,6 +15,7 @@ app.use(
       "http://localhost:3000",
       "https://formulaire-wjnw.onrender.com",
       "https://formulaire-fci-90.netlify.app/",
+      "https://formulaire-fci-90.netlify.app",
       "*",
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
